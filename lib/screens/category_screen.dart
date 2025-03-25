@@ -9,7 +9,7 @@ class CategoryScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text('Pick your category')),
       body: GridView(
-        padding: EdgeInsets.all(8),
+        padding: EdgeInsets.all(16),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           mainAxisSpacing: 20,
@@ -17,12 +17,8 @@ class CategoryScreen extends StatelessWidget {
           childAspectRatio: 3 / 2,
         ),
         children: [
-          CategoryGridItem(category: availableCategories[1]),
-          CategoryGridItem(category: availableCategories[2]),
-          CategoryGridItem(category: availableCategories[3]),
-          CategoryGridItem(category: availableCategories[4]),
-          CategoryGridItem(category: availableCategories[5]),
-          CategoryGridItem(category: availableCategories[6]),
+          for (final category in availableCategories)
+            CategoryGridItem(category: category),
         ],
       ),
     );
