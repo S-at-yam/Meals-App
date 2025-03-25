@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:google_fonts/google_fonts.dart';
+import 'package:meals_app/screens/category_screen.dart';
 
 final theme = ThemeData(
   useMaterial3: true,
@@ -20,13 +21,6 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: theme,
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello Meals', style: TextStyle(color: Colors.white)),
-        ),
-      ),
-    );
+    return MaterialApp(theme: theme, home: CategoryScreen());
   }
 }
