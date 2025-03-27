@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:meals_app/Provider/fav_meals_provider.dart';
-import 'package:meals_app/Provider/meals_provider.dart';
+
+import 'package:meals_app/Provider/filter_provider.dart';
 
 import 'package:meals_app/screens/category_screen.dart';
 import 'package:meals_app/screens/filters_screen.dart';
@@ -27,8 +28,6 @@ class TabScreen extends ConsumerStatefulWidget {
 class _TabScreenState extends ConsumerState<TabScreen> {
   int currentPageIndex = 0;
 
-  Map<Filter, bool> _selectedFilters = kInitialFilter;
-
   void _selectedTab(int index) {
     setState(() {
       currentPageIndex = index;
@@ -38,37 +37,18 @@ class _TabScreenState extends ConsumerState<TabScreen> {
   void _selectDrawerItem(String identifier) async {
     Navigator.of(context).pop();
     if (identifier == 'Filters') {
-      final result = await Navigator.of(context).push<Map<Filter, bool>>(
-        MaterialPageRoute(
-          builder: (ctx) => FiltersScreen(selectedFilters: _selectedFilters),
-        ),
+      await Navigator.of(context).push<Map<Filter, bool>>(
+        MaterialPageRoute(builder: (ctx) => FiltersScreen()),
       );
-      setState(() {
-        _selectedFilters = result ?? kInitialFilter;
-      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final meals = ref.watch(mealsProvider);
     final favMeals = ref.watch(favoriteMealsProvider);
-    final availableMeals =
-        meals.where((meal) {
-          if (_selectedFilters[Filter.glutenFree]! && !meal.isGlutenFree) {
-            return false;
-          }
-          if (_selectedFilters[Filter.lactoseFree]! && !meal.isLactoseFree) {
-            return false;
-          }
-          if (_selectedFilters[Filter.vegan]! && !meal.isVegan) {
-            return false;
-          }
-          if (_selectedFilters[Filter.vegetarian]! && !meal.isVegetarian) {
-            return false;
-          }
-          return true;
-        }).toList();
+
+    final availableMeals = ref.watch(filteredMealProvider);
+
     Widget activeScreen = CategoryScreen(availableMeals: availableMeals);
     var activePageTitle = 'Categories';
 
