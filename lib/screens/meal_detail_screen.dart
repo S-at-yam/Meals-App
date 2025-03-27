@@ -1,23 +1,46 @@
 import 'package:flutter/material.dart';
 import 'package:meals_app/Models/meal.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:meals_app/Provider/fav_meals_provider.dart';
 
-class MealDetailScreen extends StatelessWidget {
-  const MealDetailScreen({
-    super.key,
-    required this.meal,
-    required this.onFavorite,
-  });
+class MealDetailScreen extends ConsumerWidget {
+  const MealDetailScreen({super.key, required this.meal});
   final Meal meal;
-  final void Function(Meal meal) onFavorite;
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
         title: Text(meal.title),
         actions: [
           IconButton(
             onPressed: () {
-              onFavorite(meal);
+              bool wasAdded = ref
+                  .read(favoriteMealsProvider.notifier)
+                  .toggleMealFavStatus(meal);
+              if (wasAdded) {
+                ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      'Item added in favorites.',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    backgroundColor: const Color.fromARGB(255, 2, 0, 0),
+                  ),
+                );
+              } else {
+                ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      'Item removed from favorites.',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    backgroundColor: const Color.fromARGB(255, 2, 0, 0),
+                  ),
+                );
+              }
             },
 
             icon: Icon(Icons.star),
